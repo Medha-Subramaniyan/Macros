@@ -8,6 +8,10 @@
     "seed-food": "node seed-food.js",
     "seed-network": "node seed-network.js",
     "seed-posts": "node seed-posts.js",
+    "seed-meals": "node seed-meals.js",
+    "seed-macros": "node seed-macros.js",
+    "migrate": "node migrate-database.js",
+    "test-requirements": "node confirm-requirements.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

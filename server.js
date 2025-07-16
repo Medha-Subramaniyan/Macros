@@ -7,6 +7,13 @@ const mongoose = require('mongoose');
 // Import Cloudinary configuration
 const { cloudinary, upload } = require('./config/cloudinary');
 
+// Import models from models directory
+const User = require('./models/User');
+const Food = require('./models/Food');
+const Meal = require('./models/Meal');
+const Post = require('./models/Post');
+const Network = require('./models/Network');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -18,56 +25,11 @@ if (!uri) {
   process.exit(1);
 }
 
-// Define schemas
-const UserSchema = new mongoose.Schema({
-  firstName:  { type: String, required: true },
-  lastName:   { type: String, required: true },
-  email:      { type: String, required: true, unique: true },
-  password:   { type: String, required: true },
-  profilePic: { type: String },
-  bio:        { type: String },
-  createdAt:  { type: Date,   default: Date.now }
+// Connect to MongoDB using the same connection as models
+const ufnConn = require('./db');
+ufnConn.on('connected', () => {
+  console.log('✅ Database connected successfully');
 });
-
-const FoodSchema = new mongoose.Schema({
-  user:       { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  foodName:   { type: String, required: true },
-  calories:   { type: Number, required: true },
-  protein:    { type: Number, required: true },
-  carbs:      { type: Number, required: true },
-  fats:       { type: Number, required: true },
-  portionSize: { type: String, required: true },
-  mealTime:   { type: String, enum: ['breakfast', 'lunch', 'dinner', 'snack'], required: true },
-  date:       { type: Date, default: Date.now }
-});
-
-const NetworkSchema = new mongoose.Schema({
-  followerId:  { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  followingId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt:   { type: Date, default: Date.now }
-});
-
-const MealSchema = new mongoose.Schema({
-  user:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  mealTime: { type: String, enum: ['breakfast', 'lunch', 'dinner', 'snack'], required: true },
-  date:     { type: Date, required: true },
-  foods:    [{ type: mongoose.Schema.Types.ObjectId, ref: 'Food' }]
-});
-
-const PostSchema = new mongoose.Schema({
-  user:       { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  image_url:  { type: String },
-  description: { type: String },
-  meal:       { type: mongoose.Schema.Types.ObjectId, ref: 'Meal', required: true },
-  date:       { type: Date, required: true }
-});
-
-// Create models
-const User = mongoose.model('User', UserSchema);
-const Food = mongoose.model('Food', FoodSchema);
-const Network = mongoose.model('Network', NetworkSchema);
-const Meal = mongoose.model('Meal', MealSchema);
-const Post = mongoose.model('Post', PostSchema);
 
 // ─── API Endpoints 
 

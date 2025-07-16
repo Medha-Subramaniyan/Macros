@@ -1,6 +1,6 @@
 // models/Meal.js
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = require('mongoose');
+const ufnConn = require('../db');
 
 const MealSchema = new Schema({
   user:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -9,4 +9,4 @@ const MealSchema = new Schema({
   foods:    [{ type: Schema.Types.ObjectId, ref: 'Food' }]
 });
 
-module.exports = mongoose.model('Meal', MealSchema); 
+module.exports = ufnConn.model('Meal', MealSchema); 
